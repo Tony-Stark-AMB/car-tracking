@@ -1,0 +1,32 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #333;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.app-logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info span {
+  margin-right: 15px;
+  font-size: 18px;
+}
+
+.user-info .button {
+  background-color: #dc3545; /* Красная кнопка для выхода */
+}
+
+.user-info .button:hover {
+  background-color: #c82333;
+}

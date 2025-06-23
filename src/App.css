@@ -1,0 +1,40 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main-content {
+  flex-grow: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column; 
+  gap: 30px; 
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.users-section,
+.cars-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.user-list-placeholder,
+.car-list-placeholder {
+    text-align: center;
+    padding: 20px;
+    color: #555;
+    font-style: italic;
+}
