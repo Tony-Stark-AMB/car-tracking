@@ -18,3 +18,11 @@ If you are developing a production application, we recommend using TypeScript wi
 Создать CarCard для отображения информации об одном автомобиле.
 Создать CarList для отображения списка CarCard.
 Интегрировать UserList и CarList в App.jsx.
+
+Согласно ТЗ, нам нужны следующие страницы:
+
+UsersPage.jsx (/users) - для списка пользователей.
+CarsPage.jsx (/cars) - для списка всех автомобилей.
+CarDetailsPage.jsx (/cars/:id) - для деталей конкретного автомобиля.
+AddCarPage.jsx (/cars/add) - для добавления нового автомобиля.
+LoginPage.jsx (/login) - (опционально, мы сделаем это позже, если потребуется).
