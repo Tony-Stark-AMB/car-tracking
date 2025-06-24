@@ -6,7 +6,7 @@ import "./CarDetailsPage.css";
 
 const CarDetailsPage = () => {
   const { id } = useParams();
-  const car = MOCK_CARS.find(carId => carId == id);
+  const car = MOCK_CARS.find(carId => carId.id == id);
 
   if(!car){
     return (
@@ -31,7 +31,7 @@ const CarDetailsPage = () => {
         <p><strong>Status:</strong> {car.isNew ? "New" : "Used"}</p>
          {car.userId && <p><strong>Owner ID:</strong> {car.userId}</p>}
       </div>
-      <div class="car-details-actions">
+      <div className="car-details-actions">
         <Link to={`/cars/${car.id}/edit`}>
           <Button className="button-secondary">Edit Car</Button>
         </Link>

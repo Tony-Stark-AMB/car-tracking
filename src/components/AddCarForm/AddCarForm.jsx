@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 
-const AddCarForm = () => {
+const AddCarForm = ({ onSubmit }) => {
   const [carData, setCarData] = useState({
     manufacturer: "",
     model: "",
@@ -68,9 +68,17 @@ const AddCarForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if(validateForm()){
-      console.log("Form submited successfully (data below):");
-      console.table(carData);
-      alert('Car data is valid and ready for submission!');
+      if(onSubmit){
+        onSubmit(carData);
+      }
+      setCarData({
+        manufacturer: "",
+        model: "",
+        color: "",
+        price: "",
+        vin: "",
+        isNew: false,
+      })
     } else {
       console.log("Form has errors");
     }

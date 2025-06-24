@@ -1,0 +1,32 @@
+.car-details-container{
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; /* Чтобы секции не сливались */
+}
+
+/* Стили для CarDetailsPage */
+.car-details-card {
+  border: 1px solid #eee;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+}
+
+.car-details-card h3 {
+  margin-top: 0;
+  color: #007bff;
+}
+
+.car-details-card p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.car-details-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end; /* Кнопки справа */
+}

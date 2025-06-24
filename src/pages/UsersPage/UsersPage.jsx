@@ -1,9 +1,10 @@
 import React from "react";
-import UserList from "@components/UserList/UserList";
 import EmptyState from "@components/EmptyState/EmptyState";
 import {MOCK_USERS} from "../../mock/data";
+import "./UsersPage.css";
+import UserList from "../../components/UserList/UserList";
 
-const UserPage = () => {
+const UsersPage = () => {
   const users = MOCK_USERS;
 
   return (
@@ -12,10 +13,10 @@ const UserPage = () => {
       {users.length == 0 ? 
        (<EmptyState message="Nothing here yet" />)
         :
-       (<EmptyState users={users} />)
+       (<UserList users={users} />)
       }
     </section>
   );
 };
 
-export default UserPage;
+export default UsersPage;

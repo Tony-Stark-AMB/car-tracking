@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../Button/Button";
+import { Link } from "react-router-dom";
 import "./CarCard.css";
 
 const CarCard = ({car}) => {
@@ -17,7 +18,10 @@ const CarCard = ({car}) => {
       <p>Color: {car.color}</p>
       <p>VIN: {car.vin}</p>
       <div className="car-card-actions">
-        <Button onClick={handleDetaileClick}>Details</Button>
+        <Link to={`/cars/${car.id}`}>
+          <Button onClick={handleDetaileClick}>Details</Button>
+        </Link>
+        
         <Button onClick={handleEditClick} className="button-secondary">Edit</Button>
       </div>
     </div>
