@@ -1,14 +1,11 @@
 import React from "react";
-import Button from "../Button/Button";
 import "./EmptyState.css";
 
-const EmptyState = ({message, showButton, buttonText, onButtonClick}) => {
+const EmptyState = ({message, children}) => {
   return (
     <div className="empty-state">
       <p>{message}</p>
-      {showButton && (
-        <Button onClick={onButtonClick}>{buttonText}</Button>
-      )}
+      {children}
     </div>
   );
 };

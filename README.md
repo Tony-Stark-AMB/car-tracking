@@ -21,7 +21,7 @@ If you are developing a production application, we recommend using TypeScript wi
 
 Согласно ТЗ, нам нужны следующие страницы:
 
-UsersPage.jsx (/users) - для списка пользователей.
+UsersPage.jsx + (/users) - для списка пользователей.
 CarsPage.jsx (/cars) - для списка всех автомобилей.
 CarDetailsPage.jsx (/cars/:id) - для деталей конкретного автомобиля.
 AddCarPage.jsx (/cars/add) - для добавления нового автомобиля.
