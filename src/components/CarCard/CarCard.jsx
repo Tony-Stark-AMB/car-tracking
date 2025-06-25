@@ -1,28 +1,44 @@
 import React from "react";
 import Button from "../Button/Button";
-import { Link } from "react-router-dom";
 import "./CarCard.css";
+import { deleteCar, fetchCars } from "../../store/reducers/carsSlice"
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const CarCard = ({car}) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleDetaileClick = () => {
-    console.log("Detaile click btn have been clicked");
+    navigate(`/cars/${car.id}`);
   };
 
   const handleEditClick = () => {
-    console.log("Edit click btn have been clicked");
+    navigate(`/cars/${car.id}/edit`);
   };
+
+  const handleDeleteClick = async () => {
+    if(window.confirm(`Are you sure you want to delete ${car.manufacturer} ${car.model}?`)){
+      try{
+        await dispatch(deleteCar(car.id)).unwrap();
+        alert("Car deleted successfully!");
+      } catch (err) {
+        console.error("Failed to delete car:", err);
+        alert(`Failed to delete car ${err}`);
+        dispatch(fetchCars());
+      }
+    }
+  }
 
   return (
     <div className="car-card">
-      <h3>{car.manufacturer} {car.model} ({car.year})</h3>
+      <h3>{car.manufacturer} {car.model}</h3>
       <p>Color: {car.color}</p>
       <p>VIN: {car.vin}</p>
       <div className="car-card-actions">
-        <Link to={`/cars/${car.id}`}>
-          <Button onClick={handleDetaileClick}>Details</Button>
-        </Link>
-        
+        <Button onClick={handleDetaileClick}>Details</Button>
         <Button onClick={handleEditClick} className="button-secondary">Edit</Button>
+        <Button onClick={handleDeleteClick} className="button-danger">Delete</Button>
       </div>
     </div>
   );

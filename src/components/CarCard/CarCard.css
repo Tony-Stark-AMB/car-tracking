@@ -35,3 +35,11 @@
 .button-secondary:hover {
     background-color: #5a6268;
 }
+
+.button-danger {
+    background-color: #dc3545; /* Красный цвет */
+}
+
+.button-danger:hover {
+    background-color: #c82333;
+}
