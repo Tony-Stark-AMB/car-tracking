@@ -5,6 +5,8 @@ import UsersPage from './pages/UsersPage/UsersPage';
 import CarsPage from "./pages/CarsPage/CarsPage";
 import CarDetailsPage from "./pages/CarDetailsPage/CarDetailsPage";
 import AddCarPage from './pages/AddCarPage/AddCarPage';
+import EditCarPage from './pages/EditCarPage/EditCarPage';
+import UserProfilePage from "./pages/UserProfilePage/UserProfilePage";
 import { MOCK_USERS, MOCK_CARS } from './mock/data';
 import './App.css'
 
@@ -26,10 +28,12 @@ function App() {
       <main className="app-main-content">
         <Routes>
           <Route path="/cars/add" element={<AddCarPage />} />
+          <Route path="/cars/:id/edit" element={<EditCarPage />} />
           <Route path="/cars/:id" element={<CarDetailsPage />} />
           {/* <Route path="/cars/:id/edit" /> */}
           <Route path="/login"/>
           <Route path="/cars" element={<CarsPage />} />
+          <Route path="/users/:id" element={<UserProfilePage />}/>
           <Route path="/users" element={<UsersPage />}/>
           <Route path="/" element={<CarsPage />} />
           <Route path="*" element={

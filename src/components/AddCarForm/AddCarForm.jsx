@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
+import "./AddCarForm.css";
 
-const AddCarForm = ({ onSubmit }) => {
+const AddCarForm = ({ onSubmit, initialData = {}, users = [] }) => {
   const [carData, setCarData] = useState({
     manufacturer: "",
     model: "",
@@ -10,15 +11,14 @@ const AddCarForm = ({ onSubmit }) => {
     price: "",
     vin: "",
     isNew: false,
+    userId: "",
+    ...initialData,
   });
 
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
-    console.log(e.target.value)
-
     setCarData(prevData => ({
       ...prevData, 
       [name]: type === "checkbox" ? checked : value
@@ -78,6 +78,7 @@ const AddCarForm = ({ onSubmit }) => {
         price: "",
         vin: "",
         isNew: false,
+        userID: ""
       })
     } else {
       console.log("Form has errors");
@@ -86,7 +87,7 @@ const AddCarForm = ({ onSubmit }) => {
 
   return (
     <form className="add-car-form" onSubmit={handleSubmit}>
-      <h3>Add New Car</h3>
+      <h3>{initialData.id ? "Editing" : "Add New Car"}</h3>
       <Input 
         label="Manufacturer"
         id="manufacturer"
@@ -137,6 +138,25 @@ const AddCarForm = ({ onSubmit }) => {
         required={true}
         error={errors.vin}
       />
+      <div className="input-group">
+        <label htmlFor="userId">Owner</label>
+        <select 
+          name="userId"
+          id="userId"
+          value={carData.userId}
+          onChange={handleChange}
+          className="input-field"
+        >
+          <option value="">Select an owner (Optional)</option>
+          {users.map(user => {
+            <option key={user.id} value={user.id}>
+              {user.name} ({user.email})
+            </option>
+          })}
+        </select>
+        {errors.userId && <p className="input-error-message">{errors.userId}</p>}
+      </div>
+
       <div className="checkbox-group">
         <input 
           type="checkbox" 
@@ -147,7 +167,7 @@ const AddCarForm = ({ onSubmit }) => {
         />
         <label htmlFor="isNew">Is new</label>
       </div>
-      <Button type="submit">Submit</Button>
+      <Button type="submit">{initialData.id ? "Save Changes" : "Submit"}</Button>
     </form>
   );
 };

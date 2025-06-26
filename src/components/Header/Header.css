@@ -13,20 +13,20 @@
   font-weight: bold;
 }
 
-.user-info {
+.user-info-header {
   display: flex;
   align-items: center;
 }
 
-.user-info span {
+.user-info-header span {
   margin-right: 15px;
   font-size: 18px;
 }
 
-.user-info .button {
+.user-info-header .button {
   background-color: #dc3545; /* Красная кнопка для выхода */
 }
 
-.user-info .button:hover {
+.user-info-header .button:hover {
   background-color: #c82333;
 }

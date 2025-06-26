@@ -11,7 +11,7 @@ const Header = () => {
   return (
     <header className="app-header">
       <div className="app-logo">CarTracker</div>
-      <div className="user-info">
+      <div className="user-info-header">
         <span>{userName}</span>
         <Button onClick={handleLogout}></Button>
       </div>

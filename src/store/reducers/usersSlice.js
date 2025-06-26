@@ -37,7 +37,7 @@ const usersSlice = createSlice({
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.status = "failed";
-        status.error = action.payload || "Something went wrong";
+        state.error = action.payload || "Something went wrong";
       });
   },
 });
