@@ -11,6 +11,17 @@
 .app-logo {
   font-size: 24px;
   font-weight: bold;
+  color: white;
+  text-decoration: none;
+  transition: color .3s ease;
+}
+
+.app-logo:hover{
+  color: red;
+}
+
+.app.logo:visited{
+  color:blueviolet;
 }
 
 .user-info-header {

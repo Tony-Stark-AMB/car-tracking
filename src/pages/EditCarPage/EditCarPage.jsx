@@ -1,100 +1,84 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import AddCarForm from "../../components/AddCarForm/AddCarForm";
-import Button from "../../components/Button/Button";
-import { fetchCars, updateCar } from "../../store/reducers/carsSlice";
-import { fetchUsers } from "../../store/reducers/usersSlice";
-import "./EditCarPage.css";
+import React, { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCarById, updateCar } from '../../store/reducers/carsSlice';
+import AddCarForm from '../../components/AddCarForm/AddCarForm'; 
+import Button from '../../components/Button/Button';
+import './EditCarPage.css';
 
 const EditCarPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const cars = useSelector(state => state.cars.list);
-  const carsStatus = useSelector(state => state.cars.status);
-  const carsError = useSelector(state => state.cars.error);
+  const car = useSelector(state => state.cars.list.find(c => c.id === id));
+  const carStatus = useSelector(state => state.cars.status);
+  const carError = useSelector(state => state.cars.error);
 
-  const users = useSelector(state => state.users.list);
-  const usersStatus = useSelector(state => state.users.status);
-
-  const [initialCarData, setInitialCarData] = useState(null);
-
+  // Загружаем автомобиль для редактирования, если он еще не загружен
   useEffect(() => {
-    if(carsStatus == "idle" || carsStatus == "failed")
-      dispatch(fetchCars());
-    if(usersStatus == "idle" || usersStatus == "failed")
-      dispatch(fetchUsers());
-  }, [dispatch, carsStatus, usersStatus])
-
-  useEffect(() => {
-    if(carsStatus == "succeeded" && cars.length > 0){
-      const carToEdit = cars.find(car => car.id === id);
-      if(carToEdit)
-        setInitialCarData(carToEdit)
-      else  {
-        alert(`Car with ID ${id} not found`);
-        navigate("/cars");
-      }
+    if (!car && carStatus === 'idle') {
+      dispatch(fetchCarById(id));
     }
-  }, [carsStatus, cars, id, navigate]);
+    // Здесь больше не нужны usersStatus, usersError и dispatch(fetchUsers()),
+    // так как AddCarForm теперь сама управляет загрузкой пользователей.
+  }, [car, carStatus, dispatch, id]);
 
-  const handleEditCarSubmit = async (updatedData) => {
-    console.log("Submiting update car data:", updatedData);
-    try{
-      const resultAction = await dispatch(updateCar({...updatedData, id})).unwrap();
-      console.log("Car updated:", resultAction);
-      alert("Car updated successfully!");
-      navigate(`/cars/${id}`);
-    } catch (err) {
-      console.error("Failed to update car:", err);
-      alert(`Failed to update car: ${err.message || "Uknown Error"}`);
-      dispatch(fetchCars());
-    }
+  const handleUpdateCarSubmit = (formData) => {
+    dispatch(updateCar({ id, ...formData }))
+      .unwrap()
+      .then(() => {
+        alert('Car updated successfully!');
+        navigate(`/cars/${id}`);
+      })
+      .catch((error) => {
+        alert(`Failed to update car: ${error}`);
+      });
   };
 
-  if(carsStatus == "loading" || usersStatus == "loading"){
-    return (
-      <div className="edit-car-page-container">
-        <h2>Loading Car Detailes for Edit...</h2>
-      </div>
-    );
+  const handleCancel = () => {
+    navigate(`/cars/${id}`);
   };
 
-  if(carsStatus == "failed" || usersStatus == "failed"){
+  // --- Логика отображения состояния загрузки автомобиля ---
+  if (carStatus === 'loading') {
     return (
-      <div className="edit-car-page-container">
-        <h2>Error Loading Car for Edit</h2>
-        <p className="error-message">Error: {carsError || "Failed to load data"}</p>
-        <Link to="/cars">
-          <Button>Back to All Cars</Button>
-        </Link>
+      <div className="edit-car-container">
+        <h2>Loading Car...</h2>
+        <p>Please wait.</p>
       </div>
     );
   }
 
-  if(!initialCarData){
+  if (carStatus === 'failed') {
     return (
-      <div className="edit-car-page-container">
-        <h2>Car Not found or Not Loaded</h2>
-        <p>Attempting to load car detailes for ID: {id}</p>
-        <Link to="/cars">
-          <Button>Back to All Cars</Button>
-        </Link>
+      <div className="edit-car-container">
+        <h2>Error Loading Car</h2>
+        <p className="error-message">Error: {carError || 'Failed to load car details.'}</p>
+        <Button onClick={() => navigate('/cars')}>Back to Cars</Button>
+      </div>
+    );
+  }
+
+  // Пока car не загружен, не рендерим форму, чтобы initialData не был undefined
+  if (!car) {
+    return (
+      <div className="edit-car-container">
+        <h2>Car Not Found</h2>
+        <p>The car with ID "{id}" does not exist or is still loading.</p>
+        <Button onClick={() => navigate('/cars')}>Back to Cars</Button>
       </div>
     );
   }
 
   return (
-    <div className="edit-car-page-container">
+    <div className="edit-car-container">
       <h2>Edit Car</h2>
-      <AddCarForm onSubmit={handleEditCarSubmit} initialData={initialCarData} users={users}/>
-      <div style={{textAlign: "center", marginTop: "20px"}}>
-        <Link to={`/cars/${id}`}>
-          <Button>Cancel</Button>
-        </Link>
-      </div>
+      <AddCarForm
+        onSubmit={handleUpdateCarSubmit}
+        onCancel={handleCancel}
+        initialData={car} // Передаем объект car как initialData
+      />
     </div>
   );
 };

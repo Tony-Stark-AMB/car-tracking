@@ -1,0 +1,61 @@
+/* src/pages/LoginPage/LoginPage.css */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px); /* Высота с учетом хедера */
+  padding: 20px;
+  background-color: #f0f2f5;
+}
+
+.login-container h2 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.login-form {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Отступ между элементами формы */
+}
+
+.login-form .input-group {
+  margin-bottom: 0; /* Переопределяем margin-bottom из Input.css */
+}
+
+.login-form .button {
+  padding: 12px 20px;
+  font-size: 1.1em;
+  border-radius: 6px;
+}
+
+.status-message {
+    text-align: center;
+    color: #007bff;
+    font-style: italic;
+}
+
+.error-message {
+    text-align: center;
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Стили для общего экрана загрузки, используемого в App.jsx */
+.app-loading-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px); /* Высота с учетом хедера */
+    font-size: 1.5em;
+    color: #666;
+    background-color: #e9ecef;
+}

@@ -1,19 +1,38 @@
 import React from "react";
 import Button from "../Button/Button";
+import { useNavigate, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../store/reducers/authSlice";
 import "./Header.css";
 
 const Header = () => {
-  const userName = "Tony Stark";
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const currentUser = useSelector(state => state.auth.currentUser);
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+
   const handleLogout = () => {
-    console.log("logout btn clicked");
+    dispatch(logout());
+    navigate('/login');
+  };
+
+  const handleLogin = () => {
+    navigate('/login'); 
   };
 
   return (
     <header className="app-header">
-      <div className="app-logo">CarTracker</div>
+      <Link to="/" className="app-logo">CarTracker</Link>
       <div className="user-info-header">
-        <span>{userName}</span>
-        <Button onClick={handleLogout}></Button>
+        {isAuthenticated ? (
+          <>
+            <span>Welcome, {currentUser ? currentUser.name : "User"}!</span>
+            <Button onClick={handleLogout}>Logout</Button>
+          </>
+        ) : (
+          <></>// <Button onClick={handleLogin}>Logout</Button>
+        )}
       </div>
     </header>
   );

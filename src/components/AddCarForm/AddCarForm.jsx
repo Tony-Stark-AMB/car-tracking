@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import "./AddCarForm.css";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUsers } from "../../store/reducers/usersSlice";
 
-const AddCarForm = ({ onSubmit, initialData = {}, users = [] }) => {
+const AddCarForm = ({ onSubmit, initialData = {}, onCancel }) => {
+  const dispatch = useDispatch();
+
+  const users = useSelector(state => state.users.list);
+  const usersStatus = useSelector(state => state.users.status);
+  const usersError = useSelector(state => state.users.error); 
+
   const [carData, setCarData] = useState({
     manufacturer: "",
     model: "",
@@ -15,6 +23,11 @@ const AddCarForm = ({ onSubmit, initialData = {}, users = [] }) => {
     ...initialData,
   });
 
+  useEffect(() => {
+    if(usersStatus == "idle" || usersStatus == "failed")
+      dispatch(fetchUsers());
+  }, [dispatch, usersStatus])
+
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -23,8 +36,8 @@ const AddCarForm = ({ onSubmit, initialData = {}, users = [] }) => {
       ...prevData, 
       [name]: type === "checkbox" ? checked : value
     }));
-    setErrors(prevErros => ({
-      ...prevErros,
+    setErrors(prevErrors => ({
+      ...prevErrors,
       [name]: ""
     }));
   };
@@ -78,16 +91,34 @@ const AddCarForm = ({ onSubmit, initialData = {}, users = [] }) => {
         price: "",
         vin: "",
         isNew: false,
-        userID: ""
+        userId: ""
       })
     } else {
       console.log("Form has errors");
     }
   };
 
+  if (usersStatus === 'loading') {
+    return (
+      <div className="add-car-form-status-message">
+        <p>Loading users for owner selection...</p>
+      </div>
+    );
+  }
+
+  if (usersStatus === 'failed') {
+    return (
+      <div className="add-car-form-status-message error">
+        <p className="error-message">Error loading users: {usersError || 'Unknown error'}</p>
+        <p>Please try again later.</p>
+      </div>
+    );
+  }
+
+
   return (
     <form className="add-car-form" onSubmit={handleSubmit}>
-      <h3>{initialData.id ? "Editing" : "Add New Car"}</h3>
+      <h3>{initialData.id ? "Edit Car" : "Add New Car"}</h3>
       <Input 
         label="Manufacturer"
         id="manufacturer"
@@ -122,6 +153,7 @@ const AddCarForm = ({ onSubmit, initialData = {}, users = [] }) => {
         label="price"
         id="price"
         name="price"
+        type="number"
         value={carData.price}
         onChange={handleChange}
         placeholder="e.g., 880.69"
@@ -140,7 +172,7 @@ const AddCarForm = ({ onSubmit, initialData = {}, users = [] }) => {
       />
       <div className="input-group">
         <label htmlFor="userId">Owner</label>
-        <select 
+        {users.length > 0 ? (<select 
           name="userId"
           id="userId"
           value={carData.userId}
@@ -148,12 +180,15 @@ const AddCarForm = ({ onSubmit, initialData = {}, users = [] }) => {
           className="input-field"
         >
           <option value="">Select an owner (Optional)</option>
-          {users.map(user => {
+          {users.map(user => (
             <option key={user.id} value={user.id}>
               {user.name} ({user.email})
             </option>
-          })}
+          ))}
         </select>
+        ) : (
+          <p>No users avaliable. Please add users first.</p>
+        )}
         {errors.userId && <p className="input-error-message">{errors.userId}</p>}
       </div>
 
@@ -167,7 +202,10 @@ const AddCarForm = ({ onSubmit, initialData = {}, users = [] }) => {
         />
         <label htmlFor="isNew">Is new</label>
       </div>
-      <Button type="submit">{initialData.id ? "Save Changes" : "Submit"}</Button>
+      <div className="form-actions"> 
+        <Button type={"submit"}>{initialData.id ? "Save Changes" : "Add Car"}</Button>
+        {onCancel && <Button  onClick={onCancel} className="button-secondary">Cancel</Button>}
+      </div>
     </form>
   );
 };

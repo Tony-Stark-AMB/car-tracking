@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers } from '../../store/reducers/usersSlice';
 import Button from '../../components/Button/Button';
@@ -8,12 +8,13 @@ import "./UserProfilePage.css";
 import { fetchCarsByUserId } from '../../store/reducers/carsSlice';
 
 const UserProfilePage = () => {
-  const {id} = useParams();
+  const navigate = useNavigate();
+  const {id: userId } = useParams();
   const dispatch = useDispatch();
 
   const users = useSelector(state => state.users.list);
-  const usersStatus = useSelector(state => state.users.status);
-  const usersError = useSelector(state => state.users.error);
+  const userStatus = useSelector(state => state.users.status);
+  const userError = useSelector(state => state.users.error);
 
   const userCars = useSelector(state => state.cars.userCars);
   const userCarsStatus = useSelector(state => state.cars.userCarsStatus);
@@ -27,32 +28,30 @@ const UserProfilePage = () => {
   };
 
   useEffect(() => {
-    if(usersStatus == "idle" || usersStatus == "failed")
+    if(userStatus == "idle" || userStatus == "failed")
       dispatch(fetchUsers());
-  }, [usersStatus, dispatch]);
+  }, [userStatus, dispatch]);
 
   useEffect(() => {
-    if(id && (userCarsStatus === "idle" || userCarsStatus === "failed")){
-      dispatch(fetchCarsByUserId(id));
+    if (userId && (userCarsStatus === 'idle' || userCarsStatus === 'failed')) {
+      dispatch(fetchCarsByUserId(userId));
     }
-  }, [id, userCarsStatus, dispatch]);
+  }, [dispatch, userId, userCarsStatus]);
 
-  const user = users.find(u => u.id == id);
-
-  console.log(userCars);
+  const user = users.find(u => u.id == userId);
   
-  if(usersStatus == "loading"){
+  if(userStatus === "loading" || userCarsStatus === "loading"){
     return (
         <div className="user-profile-container">
-          <h2>Loading User Profile...</h2>
+          <h2>Loading User Profile and Cars...</h2>
         </div>
       );
     }
-  if(usersStatus == "failed"){
+  if(userStatus == "failed" || userCarsStatus === "failed"){
     return (
         <div className="user-profile-container">
           <h2>Error Loading User</h2>
-          <p className="error-message">Error: {usersError || "Failed to load user profile"}</p>
+          <p className="error-message">Error loading profile or cars: {userError || userCarsError}</p>
           <Link to="/users">
             <Button>Back to all users</Button>
           </Link>
@@ -64,7 +63,7 @@ const UserProfilePage = () => {
     return (
       <div className="user-profile-container">
         <h2>User Not Found</h2>
-        <p>The user with ID "{id}" does not exist or could not be loaded.</p>
+        <p>The user with ID "{userId}" does not exist or could not be loaded.</p>
         <Link to="/users">
           <Button>Back to all users</Button>
         </Link>
@@ -102,7 +101,8 @@ const UserProfilePage = () => {
         )}
       </div>
       <div className="user-profile-actions">
-        <Link to="/users">
+        <Link>
+          <Button onClick={() => navigate(`/cars/add?userId=${userId}`)}>Add New Car for this User</Button>
           <Button>Back to all users</Button>
         </Link>
       </div>
