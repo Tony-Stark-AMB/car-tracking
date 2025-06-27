@@ -69,3 +69,25 @@
   font-weight: bold;
   margin-top: 10px;
 }
+
+.user-cars-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    text-align: left; /* Выравнивание текста заголовка */
+}
+
+.user-cars-section h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.5em;
+}
+
+/* Стили для CarList внутри UserProfilePage */
+/* Если CarList уже имеет grid-display, можно просто убедиться, что он хорошо вписывается */
+
+    /* Можете добавить здесь специфические стили для сетки в этом контексте,
+       если хотите, чтобы она отличалась от общей CarList.css */
+    /* Например, если на странице профиля всегда хотите 1 колонку: */
+    /* grid-template-columns: 1fr; */

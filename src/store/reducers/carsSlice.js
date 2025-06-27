@@ -79,12 +79,31 @@ export const deleteCar = createAsyncThunk(
   }
 );
 
+export const fetchCarsByUserId = createAsyncThunk(
+  "cars/fetchCarsByUserId",
+  async (userId, {rejectWithValue}) => {
+    try{
+      const response = await fetch(API_ENDPOINTS.USER_CARS(userId));
+      if(!response.ok){
+        throw new Error(`Failed to fetch cars for user ${userId} ${response.statusText}`);
+      }
+      const data = await response.json();
+      return { userId, cars: data };
+    } catch (err){
+      return rejectWithValue(err.message);
+    }
+  }
+)
+
 const carsSlice = createSlice({
   name: "cars",
   initialState: {
     list: [],
     status: "idle",
     error: null,
+    userCars: [],
+    userCarsStatus: "idle",
+    userCarsError: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -138,10 +157,19 @@ const carsSlice = createSlice({
       .addCase(deleteCar.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || "Failed to delete car";
+      })
+      .addCase(fetchCarsByUserId.pending, (state) => {
+        state.usersarsStatus = "loading";
+      })
+      .addCase(fetchCarsByUserId.fulfilled, (state, action) => {
+        state.userCarsStatus = "succeeded";
+        state.userCars = action.payload.cars;
+      })
+      .addCase(fetchCarsByUserId.rejected, (state, action) => {
+        state.usersCarsStatus = "failed";
+        state.userСarsError = action.payload;
       });
   },
 });
-
-export const {} = carsSlice.actions;
 
 export default carsSlice.reducer;

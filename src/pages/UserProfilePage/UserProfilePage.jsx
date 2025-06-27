@@ -3,7 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers } from '../../store/reducers/usersSlice';
 import Button from '../../components/Button/Button';
+import CarList from "../../components/CarList/CarList";
 import "./UserProfilePage.css";
+import { fetchCarsByUserId } from '../../store/reducers/carsSlice';
 
 const UserProfilePage = () => {
   const {id} = useParams();
@@ -12,6 +14,10 @@ const UserProfilePage = () => {
   const users = useSelector(state => state.users.list);
   const usersStatus = useSelector(state => state.users.status);
   const usersError = useSelector(state => state.users.error);
+
+  const userCars = useSelector(state => state.cars.userCars);
+  const userCarsStatus = useSelector(state => state.cars.userCarsStatus);
+  const userCarsError = useSelector(state => state.cars.userCarsError);
 
   const getInitials = (name) => {
     if (!name) return '';
@@ -25,7 +31,15 @@ const UserProfilePage = () => {
       dispatch(fetchUsers());
   }, [usersStatus, dispatch]);
 
+  useEffect(() => {
+    if(id && (userCarsStatus === "idle" || userCarsStatus === "failed")){
+      dispatch(fetchCarsByUserId(id));
+    }
+  }, [id, userCarsStatus, dispatch]);
+
   const user = users.find(u => u.id == id);
+
+  console.log(userCars);
   
   if(usersStatus == "loading"){
     return (
@@ -71,7 +85,21 @@ const UserProfilePage = () => {
         <p><strong>Country:</strong> {user.country}</p>
         <p><strong>City:</strong> {user.city}</p>
         <p><strong>ID:</strong> {user.id}</p>
-        {/* <UserCarsList userId={user.id} /> */}
+        <div className="user-cars-section">
+          <h3>Cars owned by {user.name}</h3>
+        </div>
+        {userCarsStatus == "loading" && (<p>Loading cars...</p>)}
+        {userCarsStatus == "failed" &&  (
+          <p className="error-message">
+            Failed to load cars: {userCarsError}
+          </p>
+        )}
+        {userCarsStatus === 'succeeded' && userCars.length === 0 && (
+          <p>This user currently owns no cars.</p>
+        )}
+        {userCarsStatus == "succeeded" && userCars.length > 0 && (
+          <CarList cars={userCars}/>
+        )}
       </div>
       <div className="user-profile-actions">
         <Link to="/users">
